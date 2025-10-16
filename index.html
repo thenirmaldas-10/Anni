@@ -55,11 +55,15 @@
     border-radius: 15px;
     position: relative;
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    transition: transform 0.3s, box-shadow 0.3s;
   }
-  .gift::before {
-    content: "🎁";
-    font-size: 60px;
-    line-height: 100px;
+  .gift:hover {
+    transform: translateY(-10px) rotate(5deg);
+    box-shadow: 0 8px 20px rgba(255, 102, 178, 0.6);
   }
   #final {
     display: none;
@@ -80,7 +84,7 @@
 </style>
 </head>
 <body>
-  <audio id="bg-music" autoplay loop>
+<audio id="bg-music" loop>
   <source src="A_Thousand_Years.mp3" type="audio/mpeg">
   Your browser does not support the audio element.
 </audio>
@@ -89,6 +93,8 @@
   <h1>Hello Deveee.. 💕</h1>
   <p>I welcome you with a lot of love and happiness 🥰</p>
   <button onclick="startQuiz()">Click to start the questionnaire 💌</button>
+  <br><br>
+  <button onclick="playMusic()">Play Music 🎵</button>
 </div>
 
 <div id="quiz" class="hidden">
@@ -100,11 +106,11 @@
 </div>
 
 <div id="gifts" class="hidden">
-  <h2>Are you ready for your surprise? 🎁 Click the gift boxes in order</h2>
+  <h2>Are you ready for your surprise? 🎁 Click the boxes in order: 1 → 2 → 3</h2>
   <div class="gift-boxes">
-    <div class="gift" onclick="openGift(1)"></div>
-    <div class="gift" onclick="openGift(2)"></div>
-    <div class="gift" onclick="openGift(3)"></div>
+    <div class="gift" onclick="openGift(1)">1</div>
+    <div class="gift" onclick="openGift(2)">2</div>
+    <div class="gift" onclick="openGift(3)">3</div>
   </div>
   <p id="giftMessage"></p>
 </div>
@@ -125,6 +131,10 @@ const questions = [
   { q: "What do you love most about him?", type: "text" },
   { q: "What name do you love to call him?", type: "text" }
 ];
+
+function playMusic() {
+  document.getElementById("bg-music").play();
+}
 
 function startQuiz() {
   document.getElementById("start").classList.add("hidden");
