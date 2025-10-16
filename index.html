@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hello Deveee 💖</title>
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #ffe6f0, #e6ccff);
+    color: #d63384;
+    text-align: center;
+    padding: 40px;
+    overflow-x: hidden;
+  }
+  h1, h2, h3, p {
+    animation: fadeIn 1.2s ease forwards;
+  }
+  button {
+    background-color: #ff66b2;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-size: 16px;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  button:hover {
+    background-color: #ff3385;
+  }
+  input, select {
+    padding: 10px;
+    border-radius: 8px;
+    border: 2px solid #ff99cc;
+    margin-top: 10px;
+  }
+  @keyframes fadeIn {
+    from {opacity: 0; transform: translateY(15px);}
+    to {opacity: 1; transform: translateY(0);}
+  }
+  .hidden { display: none; }
+  .gift-boxes {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 40px;
+  }
+  .gift {
+    width: 100px;
+    height: 100px;
+    background: pink;
+    border: 3px solid #ff66b2;
+    border-radius: 15px;
+    position: relative;
+    cursor: pointer;
+  }
+  .gift::before {
+    content: "🎁";
+    font-size: 60px;
+    line-height: 100px;
+  }
+  #final {
+    display: none;
+    animation: fadeIn 2s ease;
+  }
+  .photo-show {
+    width: 200px;
+    height: 200px;
+    border-radius: 20px;
+    margin: 10px;
+    object-fit: cover;
+    animation: float 6s infinite alternate;
+  }
+  @keyframes float {
+    from { transform: translateY(0px); }
+    to { transform: translateY(-20px); }
+  }
+</style>
+</head>
+<body>
+
+<div id="start">
+  <h1>Hello Deveee.. 💕</h1>
+  <p>I welcome you with a lot of love and happiness 🥰</p>
+  <button onclick="startQuiz()">Click to start the questionnaire 💌</button>
+</div>
+
+<div id="quiz" class="hidden">
+  <h2 id="question"></h2>
+  <div id="options"></div>
+  <input id="answerBox" class="hidden" type="text" placeholder="Type your answer here...">
+  <button id="submitBtn" onclick="checkAnswer()">Submit</button>
+  <p id="feedback"></p>
+</div>
+
+<div id="gifts" class="hidden">
+  <h2>Are you ready for your surprise? 🎁</h2>
+  <div class="gift-boxes">
+    <div class="gift" onclick="openGift(1)"></div>
+    <div class="gift" onclick="openGift(2)"></div>
+    <div class="gift" onclick="openGift(3)"></div>
+  </div>
+  <p id="giftMessage"></p>
+</div>
+
+<div id="final">
+  <h1>💞 Happy Anniversary My Love 💞</h1>
+  <div id="photoContainer"></div>
+  <h2 style="margin-top:30px;">You are my forever, my reason to smile, my happiest dream come true. 💖</h2>
+</div>
+
+<script>
+let step = 0;
+const questions = [
+  { q: "When did you meet your boyfriend for the first time?", type: "date", correct: "2024-09-25" },
+  { q: "Your boyfriend's date of birth?", type: "mcq", options: ["20/07/2000","21/07/2000","20/06/2001","20/06/2001"], correct: "20/07/2000" },
+  { q: "Have you kissed your boyfriend? If yes, from where was your first kiss?", type: "text" },
+  { q: "Your best memory with your boyfriend?", type: "text" },
+  { q: "What do you love most about him?", type: "text" },
+  { q: "What name do you love to call him?", type: "text" }
+];
+
+function startQuiz() {
+  document.getElementById("start").classList.add("hidden");
+  document.getElementById("quiz").classList.remove("hidden");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  const q = questions[step];
+  document.getElementById("feedback").innerHTML = "";
+  document.getElementById("question").innerText = q.q;
+  const optionsDiv = document.getElementById("options");
+  const ansBox = document.getElementById("answerBox");
+  optionsDiv.innerHTML = "";
+  ansBox.classList.add("hidden");
+
+  if (q.type === "date") {
+    optionsDiv.innerHTML = `<input type="date" id="dateAnswer">`;
+  } else if (q.type === "mcq") {
+    q.options.sort(() => Math.random() - 0.5);
+    q.options.forEach(opt => {
+      optionsDiv.innerHTML += `<div><input type="radio" name="mcq" value="${opt}"> ${opt}</div>`;
+    });
+  } else {
+    ansBox.classList.remove("hidden");
+  }
+}
+
+function checkAnswer() {
+  const q = questions[step];
+  let userAns = "";
+
+  if (q.type === "date") userAns = document.getElementById("dateAnswer").value;
+  else if (q.type === "mcq") {
+    const checked = document.querySelector('input[name="mcq"]:checked');
+    if (checked) userAns = checked.value;
+  } else {
+    userAns = document.getElementById("answerBox").value.trim();
+  }
+
+  if (q.correct && userAns !== q.correct) {
+    document.getElementById("feedback").innerText = "Oops 😅 Try again, my love!";
+    return;
+  }
+
+  step++;
+  if (step < questions.length) loadQuestion();
+  else {
+    document.getElementById("quiz").classList.add("hidden");
+    document.getElementById("gifts").classList.remove("hidden");
+  }
+}
+
+function openGift(n) {
+  const gift = document.querySelectorAll(".gift")[n-1];
+  gift.style.display = "none";
+  const msg = document.getElementById("giftMessage");
+
+  if (n === 1) msg.innerText = "😂 Your boyfriend's bank balance is less than ₹100, no gift here!";
+  else if (n === 2) msg.innerText = "💞 Your boyfriend's best gift for you is his love, and be happy with that!";
+  else {
+    document.getElementById("gifts").classList.add("hidden");
+    showFinal();
+  }
+}
+
+function showFinal() {
+  const final = document.getElementById("final");
+  final.style.display = "block";
+  const photoContainer = document.getElementById("photoContainer");
+
+  const photos = ["photo1.jpg", "photo2.jpg", "photo3.jpg", "photo4.jpg"];
+  photos.forEach((src, i) => {
+    const img = document.createElement("img");
+    img.src = src;
+    img.className = "photo-show";
+    img.style.animationDelay = `${i}s`;
+    photoContainer.appendChild(img);
+  });
+
+  setTimeout(() => {
+    photoContainer.innerHTML = '<img src="finalphoto.jpg" class="photo-show" style="width:300px;height:300px;"><h2>💖 Happy Anniversary, my Deveee 💖</h2>';
+  }, 45000);
+}
+</script>
+</body>
+</html>
