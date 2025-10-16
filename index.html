@@ -65,6 +65,21 @@
     transform: translateY(-10px) rotate(5deg);
     box-shadow: 0 8px 20px rgba(255, 102, 178, 0.6);
   }
+  .gift-number {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    background: #ff3385;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   #final {
     display: none;
     animation: fadeIn 2s ease;
@@ -84,6 +99,7 @@
 </style>
 </head>
 <body>
+
 <audio id="bg-music" loop>
   <source src="A_Thousand_Years.mp3" type="audio/mpeg">
   Your browser does not support the audio element.
@@ -108,9 +124,15 @@
 <div id="gifts" class="hidden">
   <h2>Are you ready for your surprise? 🎁 Click the boxes in order: 1 → 2 → 3</h2>
   <div class="gift-boxes">
-    <div class="gift" onclick="openGift(1)">1</div>
-    <div class="gift" onclick="openGift(2)">2</div>
-    <div class="gift" onclick="openGift(3)">3</div>
+    <div class="gift" onclick="openGift(1)">
+      <div class="gift-number">1</div>🎁
+    </div>
+    <div class="gift" onclick="openGift(2)">
+      <div class="gift-number">2</div>🎁
+    </div>
+    <div class="gift" onclick="openGift(3)">
+      <div class="gift-number">3</div>🎁
+    </div>
   </div>
   <p id="giftMessage"></p>
 </div>
@@ -133,7 +155,10 @@ const questions = [
 ];
 
 function playMusic() {
-  document.getElementById("bg-music").play();
+  const audio = document.getElementById("bg-music");
+  audio.play().catch(err => {
+    alert("Music could not play. Click the Play button or check your browser settings.");
+  });
 }
 
 function startQuiz() {
@@ -220,5 +245,6 @@ function showFinal() {
   }, 45000);
 }
 </script>
+
 </body>
 </html>
