@@ -90,11 +90,12 @@
     border-radius: 20px;
     margin: 10px;
     object-fit: cover;
-    animation: float 6s infinite alternate;
+    opacity: 0;
+    transform: scale(0.5);
+    animation: appear 1s forwards;
   }
-  @keyframes float {
-    from { transform: translateY(0px); }
-    to { transform: translateY(-20px); }
+  @keyframes appear {
+    to { opacity: 1; transform: scale(1); }
   }
 </style>
 </head>
@@ -107,10 +108,10 @@
 
 <div id="start">
   <h1>Hello Deveee.. 💕</h1>
-  <p>I welcome you with a lot of love and happiness 🥰</p>
-  <button onclick="startQuiz()">Click to start the questionnaire 💌</button>
-  <br><br>
+  <p>Press the music button first 🎵, then start the questionnaire 💌</p>
   <button onclick="playMusic()">Play Music 🎵</button>
+  <br><br>
+  <button id="startQuizBtn" onclick="startQuiz()" disabled>Start Questionnaire 💌</button>
 </div>
 
 <div id="quiz" class="hidden">
@@ -156,7 +157,10 @@ const questions = [
 
 function playMusic() {
   const audio = document.getElementById("bg-music");
-  audio.play().catch(err => {
+  audio.play().then(() => {
+    document.getElementById("startQuizBtn").disabled = false;
+    alert("Music is playing! Now you can start the questionnaire.");
+  }).catch(err => {
     alert("Music could not play. Click the Play button or check your browser settings.");
   });
 }
@@ -232,17 +236,19 @@ function showFinal() {
   const photoContainer = document.getElementById("photoContainer");
 
   const photos = ["photo1.jpg", "photo2.jpg", "photo3.jpg", "photo4.jpg"];
+  
   photos.forEach((src, i) => {
-    const img = document.createElement("img");
-    img.src = src;
-    img.className = "photo-show";
-    img.style.animationDelay = `${i}s`;
-    photoContainer.appendChild(img);
+    setTimeout(() => {
+      const img = document.createElement("img");
+      img.src = src;
+      img.className = "photo-show";
+      photoContainer.appendChild(img);
+    }, i * 1000); // 1 second interval between photos
   });
 
   setTimeout(() => {
     photoContainer.innerHTML = '<img src="finalphoto.jpg" class="photo-show" style="width:300px;height:300px;"><h2>💖 Happy Anniversary, my Deveee 💖</h2>';
-  }, 45000);
+  }, photos.length * 1000 + 1000); // show final photo after all 4 pics
 }
 </script>
 
