@@ -13,9 +13,11 @@
     padding: 40px;
     overflow-x: hidden;
   }
+
   h1, h2, h3, p {
     animation: fadeIn 1.2s ease forwards;
   }
+
   button {
     background-color: #ff66b2;
     color: white;
@@ -27,26 +29,32 @@
     cursor: pointer;
     transition: 0.3s;
   }
+
   button:hover {
     background-color: #ff3385;
   }
+
   input, select {
     padding: 10px;
     border-radius: 8px;
     border: 2px solid #ff99cc;
     margin-top: 10px;
   }
+
   @keyframes fadeIn {
     from {opacity: 0; transform: translateY(15px);}
     to {opacity: 1; transform: translateY(0);}
   }
+
   .hidden { display: none; }
+
   .gift-boxes {
     display: flex;
     justify-content: center;
     gap: 20px;
     margin-top: 40px;
   }
+
   .gift {
     width: 100px;
     height: 100px;
@@ -61,10 +69,12 @@
     font-size: 30px;
     transition: transform 0.3s, box-shadow 0.3s;
   }
+
   .gift:hover {
     transform: translateY(-10px) rotate(5deg);
     box-shadow: 0 8px 20px rgba(255, 102, 178, 0.6);
   }
+
   .gift-number {
     position: absolute;
     top: 5px;
@@ -80,10 +90,12 @@
     justify-content: center;
     align-items: center;
   }
+
   #final {
     display: none;
     animation: fadeIn 2s ease;
   }
+
   .photo-show {
     width: 200px;
     height: 200px;
@@ -94,8 +106,20 @@
     transform: scale(0.5);
     animation: appear 1s forwards;
   }
+
   @keyframes appear {
     to { opacity: 1; transform: scale(1); }
+  }
+
+  /* 🌸 Opening page background (her photo) */
+  #start {
+    background: url('her_photo.jpg') no-repeat center center/cover;
+    color: white;
+    border-radius: 20px;
+    padding: 60px 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    max-width: 500px;
+    margin: auto;
   }
 </style>
 </head>
@@ -243,12 +267,12 @@ function showFinal() {
       img.src = src;
       img.className = "photo-show";
       photoContainer.appendChild(img);
-    }, i * 1000); // 1 second interval between photos
+    }, i * 1000);
   });
 
   setTimeout(() => {
     photoContainer.innerHTML = '<img src="finalphoto.jpg" class="photo-show" style="width:300px;height:300px;"><h2>💖 Happy Anniversary, my Deveee 💖</h2>';
-  }, photos.length * 1000 + 1000); // show final photo after all 4 pics
+  }, photos.length * 1000 + 1000);
 }
 </script>
 
