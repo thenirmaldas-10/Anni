@@ -5,46 +5,55 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hello Deveee 💖</title>
 <style>
+  * {
+    box-sizing: border-box;
+  }
+
   body {
     font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
     background: linear-gradient(135deg, #ffe6f0, #e6ccff);
     color: #d63384;
     text-align: center;
-    margin: 0;
-    padding: 0;
     overflow-x: hidden;
   }
 
   section {
     display: none;
     min-height: 100vh;
+    width: 100%;
     padding: 40px 20px;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
   }
 
   section.active {
-    display: block;
-    animation: fadeIn 1s ease;
+    display: flex;
+    animation: fadeIn 0.8s ease forwards;
   }
 
-  #start {
-    background: linear-gradient(135deg, #ffe6f0, #e6ccff);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   #start img {
-    width: 100%;
-    max-width: 450px;
-    height: auto;
+    width: 90%;
+    max-width: 400px;
     border-radius: 20px;
+    margin-top: 40px;
     box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-    margin-top: 20px;
   }
 
-  #start h1, #start p {
-    margin-top: 25px;
-    padding: 0 15px;
+  #start h1 {
+    margin-top: 30px;
+    font-size: 2rem;
+  }
+
+  #start p {
+    margin: 10px 0 20px;
   }
 
   button {
@@ -52,9 +61,9 @@
     color: white;
     border: none;
     border-radius: 10px;
-    padding: 12px 24px;
+    padding: 12px 28px;
     font-size: 16px;
-    margin-top: 20px;
+    margin: 10px;
     cursor: pointer;
     transition: 0.3s;
   }
@@ -67,21 +76,18 @@
     padding: 10px;
     border-radius: 8px;
     border: 2px solid #ff99cc;
-    margin-top: 10px;
+    margin-top: 15px;
+    font-size: 16px;
+    width: 80%;
+    max-width: 300px;
   }
-
-  @keyframes fadeIn {
-    from {opacity: 0; transform: translateY(15px);}
-    to {opacity: 1; transform: translateY(0);}
-  }
-
-  .hidden { display: none; }
 
   .gift-boxes {
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 30px;
     margin-top: 40px;
+    flex-wrap: wrap;
   }
 
   .gift {
@@ -134,6 +140,7 @@
   @keyframes appear {
     to { opacity: 1; transform: scale(1); }
   }
+
 </style>
 </head>
 <body>
@@ -149,7 +156,6 @@
   <h1>Hello Deveee.. 💕</h1>
   <p>Press the music button first 🎵, then start the questionnaire 💌</p>
   <button onclick="playMusic()">Play Music 🎵</button>
-  <br><br>
   <button id="startQuizBtn" onclick="goToQuiz()" disabled>Start Questionnaire 💌</button>
 </section>
 
@@ -193,6 +199,7 @@ const sections = document.querySelectorAll("section");
 function showSection(id) {
   sections.forEach(s => s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
+  window.scrollTo(0,0);
 }
 
 const questions = [
@@ -208,9 +215,9 @@ function playMusic() {
   const audio = document.getElementById("bg-music");
   audio.play().then(() => {
     document.getElementById("startQuizBtn").disabled = false;
-    alert("Music is playing! Now you can start the questionnaire.");
-  }).catch(err => {
-    alert("Music could not play. Click the Play button or check your browser settings.");
+    alert("Music started! Now begin the questionnaire 💌");
+  }).catch(() => {
+    alert("Unable to autoplay. Please tap the play button again ❤️");
   });
 }
 
@@ -229,7 +236,7 @@ function loadQuestion() {
   ansBox.classList.add("hidden");
 
   if (q.type === "date") {
-    optionsDiv.innerHTML = `<input type="date" id="dateAnswer" required>`;
+    optionsDiv.innerHTML = `<input type="date" id="dateAnswer">`;
   } else if (q.type === "mcq") {
     q.options.sort(() => Math.random() - 0.5);
     q.options.forEach(opt => {
@@ -250,7 +257,7 @@ function checkAnswer() {
     if (!userAns) return alert("Please answer before moving ahead ❤️");
   } else if (q.type === "mcq") {
     const checked = document.querySelector('input[name="mcq"]:checked');
-    if (!checked) return alert("Please select an answer before moving ahead ❤️");
+    if (!checked) return alert("Please select an answer ❤️");
     userAns = checked.value;
   } else {
     userAns = document.getElementById("answerBox").value.trim();
@@ -258,7 +265,7 @@ function checkAnswer() {
   }
 
   if (q.correct && userAns !== q.correct) {
-    document.getElementById("feedback").innerText = "Oops 😅 Try again, my love!";
+    document.getElementById("feedback").innerText = "Oops 😅 Try again!";
     return;
   }
 
@@ -268,12 +275,13 @@ function checkAnswer() {
 }
 
 function openGift(n) {
-  const gift = document.querySelectorAll(".gift")[n-1];
-  gift.style.display = "none";
+  const gifts = document.querySelectorAll(".gift");
   const msg = document.getElementById("giftMessage");
 
-  if (n === 1) msg.innerText = "😂 Your boyfriend's bank balance is less than ₹100, no gift here!";
-  else if (n === 2) msg.innerText = "💞 Your boyfriend's best gift for you is his love, and be happy with that!";
+  gifts[n-1].style.display = "none";
+
+  if (n === 1) msg.innerText = "😂 Your boyfriend’s bank balance is less than ₹100!";
+  else if (n === 2) msg.innerText = "💞 Your boyfriend’s best gift for you is his love!";
   else showFinal();
 }
 
@@ -288,12 +296,12 @@ function showFinal() {
       img.src = src;
       img.className = "photo-show";
       photoContainer.appendChild(img);
-    }, i * 1000);
+    }, i * 800);
   });
 
   setTimeout(() => {
     photoContainer.innerHTML = '<img src="finalphoto.jpg" class="photo-show" style="width:300px;height:300px;"><h2>💖 Happy Anniversary, my Deveee 💖</h2>';
-  }, photos.length * 1000 + 1000);
+  }, photos.length * 800 + 1000);
 }
 </script>
 </body>
