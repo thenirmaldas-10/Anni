@@ -28,18 +28,23 @@
 
   #start {
     background: linear-gradient(135deg, #ffe6f0, #e6ccff);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   #start img {
-    width: 90%;
-    max-width: 400px;
+    width: 100%;
+    max-width: 450px;
+    height: auto;
     border-radius: 20px;
     box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-    margin-top: 30px;
+    margin-top: 20px;
   }
 
   #start h1, #start p {
     margin-top: 25px;
+    padding: 0 15px;
   }
 
   button {
@@ -192,7 +197,7 @@ function showSection(id) {
 
 const questions = [
   { q: "When did you meet your boyfriend for the first time?", type: "date", correct: "2024-09-25" },
-  { q: "Your boyfriend's date of birth?", type: "mcq", options: ["20/07/2000","21/07/2000","20/06/2001","20/06/2001"], correct: "20/07/2000" },
+  { q: "Your boyfriend's date of birth?", type: "mcq", options: ["20/07/2000","21/07/2000","20/06/2001"], correct: "20/07/2000" },
   { q: "Have you kissed your boyfriend? If yes, from where was your first kiss?", type: "text" },
   { q: "Your best memory with your boyfriend?", type: "text" },
   { q: "What do you love most about him?", type: "text" },
@@ -224,7 +229,7 @@ function loadQuestion() {
   ansBox.classList.add("hidden");
 
   if (q.type === "date") {
-    optionsDiv.innerHTML = `<input type="date" id="dateAnswer">`;
+    optionsDiv.innerHTML = `<input type="date" id="dateAnswer" required>`;
   } else if (q.type === "mcq") {
     q.options.sort(() => Math.random() - 0.5);
     q.options.forEach(opt => {
@@ -232,6 +237,7 @@ function loadQuestion() {
     });
   } else {
     ansBox.classList.remove("hidden");
+    ansBox.value = "";
   }
 }
 
@@ -239,12 +245,16 @@ function checkAnswer() {
   const q = questions[step];
   let userAns = "";
 
-  if (q.type === "date") userAns = document.getElementById("dateAnswer").value;
-  else if (q.type === "mcq") {
+  if (q.type === "date") {
+    userAns = document.getElementById("dateAnswer").value;
+    if (!userAns) return alert("Please answer before moving ahead ❤️");
+  } else if (q.type === "mcq") {
     const checked = document.querySelector('input[name="mcq"]:checked');
-    if (checked) userAns = checked.value;
+    if (!checked) return alert("Please select an answer before moving ahead ❤️");
+    userAns = checked.value;
   } else {
     userAns = document.getElementById("answerBox").value.trim();
+    if (!userAns) return alert("Please answer before moving ahead ❤️");
   }
 
   if (q.correct && userAns !== q.correct) {
