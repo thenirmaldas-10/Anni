@@ -7,10 +7,10 @@
 <style>
   body {
     font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #ffe6f0, #e6ccff);
+    background: linear-gradient(180deg, #ffe6f0 0%, #e6ccff 50%, #f8d9ff 100%);
     color: #d63384;
     text-align: center;
-    padding: 40px;
+    margin: 0;
     overflow-x: hidden;
   }
 
@@ -22,8 +22,8 @@
     background-color: #ff66b2;
     color: white;
     border: none;
-    border-radius: 10px;
-    padding: 12px 24px;
+    border-radius: 12px;
+    padding: 12px 28px;
     font-size: 16px;
     margin-top: 20px;
     cursor: pointer;
@@ -47,6 +47,25 @@
   }
 
   .hidden { display: none; }
+
+  /* top photo section */
+  .top-photo {
+    width: 100%;
+    height: 70vh;
+    background: url('her_photo.jpg') no-repeat center center/cover;
+    border-bottom: 5px solid #ff99cc;
+  }
+
+  /* bottom section (pink lavender area) */
+  #start {
+    background: linear-gradient(135deg, #ffe6f0, #e6ccff);
+    color: #d63384;
+    padding: 60px 20px 80px;
+    border-radius: 20px 20px 0 0;
+    max-width: 600px;
+    margin: -80px auto 0 auto;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  }
 
   .gift-boxes {
     display: flex;
@@ -110,17 +129,6 @@
   @keyframes appear {
     to { opacity: 1; transform: scale(1); }
   }
-
-  /* 🌸 Opening page background (her photo) */
-  #start {
-    background: url('her_photo.jpg') no-repeat center center/cover;
-    color: white;
-    border-radius: 20px;
-    padding: 60px 20px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-    max-width: 500px;
-    margin: auto;
-  }
 </style>
 </head>
 <body>
@@ -130,6 +138,10 @@
   Your browser does not support the audio element.
 </audio>
 
+<!-- top photo banner -->
+<div class="top-photo"></div>
+
+<!-- greeting and questionnaire start section -->
 <div id="start">
   <h1>Hello Deveee.. 💕</h1>
   <p>Press the music button first 🎵, then start the questionnaire 💌</p>
@@ -138,6 +150,7 @@
   <button id="startQuizBtn" onclick="startQuiz()" disabled>Start Questionnaire 💌</button>
 </div>
 
+<!-- questionnaire -->
 <div id="quiz" class="hidden">
   <h2 id="question"></h2>
   <div id="options"></div>
@@ -146,6 +159,7 @@
   <p id="feedback"></p>
 </div>
 
+<!-- gift section -->
 <div id="gifts" class="hidden">
   <h2>Are you ready for your surprise? 🎁 Click the boxes in order: 1 → 2 → 3</h2>
   <div class="gift-boxes">
@@ -162,6 +176,7 @@
   <p id="giftMessage"></p>
 </div>
 
+<!-- final surprise -->
 <div id="final">
   <h1>💞 Happy Anniversary My Love 💞</h1>
   <div id="photoContainer"></div>
@@ -190,6 +205,7 @@ function playMusic() {
 }
 
 function startQuiz() {
+  document.querySelector('.top-photo').classList.add("hidden");
   document.getElementById("start").classList.add("hidden");
   document.getElementById("quiz").classList.remove("hidden");
   loadQuestion();
