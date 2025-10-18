@@ -5,9 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hello Deveee 💖</title>
 <style>
-  * {
-    box-sizing: border-box;
-  }
+  * { box-sizing: border-box; }
 
   body {
     font-family: 'Poppins', sans-serif;
@@ -82,6 +80,8 @@
     max-width: 300px;
   }
 
+  .hidden { display: none; }
+
   .gift-boxes {
     display: flex;
     justify-content: center;
@@ -140,7 +140,6 @@
   @keyframes appear {
     to { opacity: 1; transform: scale(1); }
   }
-
 </style>
 </head>
 <body>
@@ -194,6 +193,7 @@
 
 <script>
 let step = 0;
+let nextGift = 1;
 const sections = document.querySelectorAll("section");
 
 function showSection(id) {
@@ -275,14 +275,20 @@ function checkAnswer() {
 }
 
 function openGift(n) {
-  const gifts = document.querySelectorAll(".gift");
   const msg = document.getElementById("giftMessage");
 
-  gifts[n-1].style.display = "none";
+  if (n !== nextGift) {
+    msg.innerText = "Please open the boxes in order — start with Box " + nextGift + " 💝";
+    return;
+  }
 
-  if (n === 1) msg.innerText = "😂 Your boyfriend’s bank balance is less than ₹100!";
+  document.querySelectorAll(".gift")[n-1].style.display = "none";
+
+  if (n === 1) msg.innerText = "😂 Your boyfriend’s bank balance is less than ₹100! So, No Gift Here";
   else if (n === 2) msg.innerText = "💞 Your boyfriend’s best gift for you is his love!";
   else showFinal();
+
+  nextGift++;
 }
 
 function showFinal() {
