@@ -144,7 +144,7 @@
 </head>
 <body>
 
-<audio id="bg-music" loop>
+<audio id="bg-music" autoplay loop>
   <source src="A_Thousand_Years.mp3" type="audio/mpeg">
   Your browser does not support the audio element.
 </audio>
@@ -153,16 +153,14 @@
 <section id="start" class="active">
   <img src="her_photo.jpg" alt="Her Photo">
   <h1>Hello Deveee.. 💕</h1>
-  <p>Press the music button first 🎵, then start the questionnaire 💌</p>
-  <button onclick="playMusic()">Play Music 🎵</button>
-  <button id="startQuizBtn" onclick="goToQuiz()" disabled>Start Questionnaire 💌</button>
+  <p>Start the questionnaire and enjoy your surprise 💌</p>
+  <button onclick="goToQuiz()">Start Questionnaire 💌</button>
 </section>
 
 <!-- Questionnaire Page -->
 <section id="quiz">
   <h2 id="question"></h2>
   <div id="options"></div>
-  <input id="answerBox" class="hidden" type="text" placeholder="Type your answer here...">
   <button id="submitBtn" onclick="checkAnswer()">Submit</button>
   <p id="feedback"></p>
 </section>
@@ -196,6 +194,15 @@ let step = 0;
 let nextGift = 1;
 const sections = document.querySelectorAll("section");
 
+// Handle autoplay fallback
+document.addEventListener("click", function enableMusic() {
+  const audio = document.getElementById("bg-music");
+  if (audio.paused) {
+    audio.play();
+  }
+  document.removeEventListener("click", enableMusic);
+});
+
 function showSection(id) {
   sections.forEach(s => s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
@@ -211,16 +218,6 @@ const questions = [
   { q: "What name do you love to call him?", type: "text" }
 ];
 
-function playMusic() {
-  const audio = document.getElementById("bg-music");
-  audio.play().then(() => {
-    document.getElementById("startQuizBtn").disabled = false;
-    alert("Music started! Now begin the questionnaire 💌");
-  }).catch(() => {
-    alert("Unable to autoplay. Please tap the play button again ❤️");
-  });
-}
-
 function goToQuiz() {
   showSection("quiz");
   loadQuestion();
@@ -231,9 +228,7 @@ function loadQuestion() {
   document.getElementById("feedback").innerHTML = "";
   document.getElementById("question").innerText = q.q;
   const optionsDiv = document.getElementById("options");
-  const ansBox = document.getElementById("answerBox");
   optionsDiv.innerHTML = "";
-  ansBox.classList.add("hidden");
 
   if (q.type === "date") {
     optionsDiv.innerHTML = `<input type="date" id="dateAnswer">`;
@@ -243,8 +238,7 @@ function loadQuestion() {
       optionsDiv.innerHTML += `<div><input type="radio" name="mcq" value="${opt}"> ${opt}</div>`;
     });
   } else {
-    ansBox.classList.remove("hidden");
-    ansBox.value = "";
+    optionsDiv.innerHTML = `<input type="text" id="textAnswer" placeholder="Type your answer here...">`;
   }
 }
 
@@ -254,14 +248,14 @@ function checkAnswer() {
 
   if (q.type === "date") {
     userAns = document.getElementById("dateAnswer").value;
-    if (!userAns) return alert("Please answer before moving ahead ❤️");
+    if (!userAns) return alert("Please select a date before moving ahead ❤️");
   } else if (q.type === "mcq") {
     const checked = document.querySelector('input[name="mcq"]:checked');
     if (!checked) return alert("Please select an answer ❤️");
     userAns = checked.value;
   } else {
-    userAns = document.getElementById("answerBox").value.trim();
-    if (!userAns) return alert("Please answer before moving ahead ❤️");
+    userAns = document.getElementById("textAnswer").value.trim();
+    if (!userAns) return alert("Please type your answer ❤️");
   }
 
   if (q.correct && userAns !== q.correct) {
@@ -278,7 +272,7 @@ function openGift(n) {
   const msg = document.getElementById("giftMessage");
 
   if (n !== nextGift) {
-    msg.innerText = "Please open the boxes in order — start with Box " + nextGift + " 💝";
+    msg.innerText = "Please open the boxes in order — 1, then 2, then 3 💖";
     return;
   }
 
