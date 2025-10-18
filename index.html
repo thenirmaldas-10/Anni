@@ -5,7 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hello Deveee 💖</title>
 <style>
-  * { box-sizing: border-box; }
+  * {
+    box-sizing: border-box;
+  }
 
   body {
     font-family: 'Poppins', sans-serif;
@@ -80,8 +82,6 @@
     max-width: 300px;
   }
 
-  .hidden { display: none; }
-
   .gift-boxes {
     display: flex;
     justify-content: center;
@@ -126,6 +126,21 @@
     align-items: center;
   }
 
+  /* Horizontally aligned MCQ options */
+  #options.mcq-horizontal {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+
+  #options.mcq-horizontal div {
+    background: #fff;
+    border: 2px solid #ff99cc;
+    border-radius: 10px;
+    padding: 8px 16px;
+  }
+
   .photo-show {
     width: 200px;
     height: 200px;
@@ -140,6 +155,22 @@
   @keyframes appear {
     to { opacity: 1; transform: scale(1); }
   }
+
+  /* Floating Hearts Animation */
+  .heart {
+    position: fixed;
+    bottom: 0;
+    color: #ff4da6;
+    font-size: 24px;
+    animation: floatUp 6s linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes floatUp {
+    0% { transform: translateY(0) scale(1); opacity: 1; }
+    100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
+  }
+
 </style>
 </head>
 <body>
@@ -153,14 +184,14 @@
 <section id="start" class="active">
   <img src="her_photo.jpg" alt="Her Photo">
   <h1>Hello Deveee.. 💕</h1>
-  <p>Start the questionnaire and enjoy your surprise 💌</p>
-  <button onclick="goToQuiz()">Start Questionnaire 💌</button>
+  <button id="startQuizBtn" onclick="goToQuiz()">Start Questionnaire 💌</button>
 </section>
 
 <!-- Questionnaire Page -->
 <section id="quiz">
   <h2 id="question"></h2>
   <div id="options"></div>
+  <input id="answerBox" class="hidden" type="text" placeholder="Type your answer here...">
   <button id="submitBtn" onclick="checkAnswer()">Submit</button>
   <p id="feedback"></p>
 </section>
@@ -191,17 +222,8 @@
 
 <script>
 let step = 0;
-let nextGift = 1;
+let expectedGift = 1;
 const sections = document.querySelectorAll("section");
-
-// Handle autoplay fallback
-document.addEventListener("click", function enableMusic() {
-  const audio = document.getElementById("bg-music");
-  if (audio.paused) {
-    audio.play();
-  }
-  document.removeEventListener("click", enableMusic);
-});
 
 function showSection(id) {
   sections.forEach(s => s.classList.remove("active"));
@@ -228,17 +250,23 @@ function loadQuestion() {
   document.getElementById("feedback").innerHTML = "";
   document.getElementById("question").innerText = q.q;
   const optionsDiv = document.getElementById("options");
+  const ansBox = document.getElementById("answerBox");
   optionsDiv.innerHTML = "";
+  ansBox.classList.add("hidden");
 
   if (q.type === "date") {
+    optionsDiv.className = "";
     optionsDiv.innerHTML = `<input type="date" id="dateAnswer">`;
   } else if (q.type === "mcq") {
+    optionsDiv.className = "mcq-horizontal";
     q.options.sort(() => Math.random() - 0.5);
     q.options.forEach(opt => {
       optionsDiv.innerHTML += `<div><input type="radio" name="mcq" value="${opt}"> ${opt}</div>`;
     });
   } else {
-    optionsDiv.innerHTML = `<input type="text" id="textAnswer" placeholder="Type your answer here...">`;
+    optionsDiv.className = "";
+    ansBox.classList.remove("hidden");
+    ansBox.value = "";
   }
 }
 
@@ -248,14 +276,14 @@ function checkAnswer() {
 
   if (q.type === "date") {
     userAns = document.getElementById("dateAnswer").value;
-    if (!userAns) return alert("Please select a date before moving ahead ❤️");
+    if (!userAns) return alert("Please answer before moving ahead ❤️");
   } else if (q.type === "mcq") {
     const checked = document.querySelector('input[name="mcq"]:checked');
     if (!checked) return alert("Please select an answer ❤️");
     userAns = checked.value;
   } else {
-    userAns = document.getElementById("textAnswer").value.trim();
-    if (!userAns) return alert("Please type your answer ❤️");
+    userAns = document.getElementById("answerBox").value.trim();
+    if (!userAns) return alert("Please answer before moving ahead ❤️");
   }
 
   if (q.correct && userAns !== q.correct) {
@@ -269,20 +297,21 @@ function checkAnswer() {
 }
 
 function openGift(n) {
+  const gifts = document.querySelectorAll(".gift");
   const msg = document.getElementById("giftMessage");
 
-  if (n !== nextGift) {
-    msg.innerText = "Please open the boxes in order — 1, then 2, then 3 💖";
+  if (n !== expectedGift) {
+    msg.innerText = "Please click the boxes in order: 1 → 2 → 3 ❤️";
     return;
   }
 
-  document.querySelectorAll(".gift")[n-1].style.display = "none";
+  gifts[n-1].style.display = "none";
 
   if (n === 1) msg.innerText = "😂 Your boyfriend’s bank balance is less than ₹100! So, No Gift Here";
   else if (n === 2) msg.innerText = "💞 Your boyfriend’s best gift for you is his love!";
   else showFinal();
 
-  nextGift++;
+  expectedGift++;
 }
 
 function showFinal() {
@@ -302,6 +331,22 @@ function showFinal() {
   setTimeout(() => {
     photoContainer.innerHTML = '<img src="finalphoto.jpg" class="photo-show" style="width:300px;height:300px;"><h2>💖 Happy Anniversary, my Deveee 💖</h2>';
   }, photos.length * 800 + 1000);
+
+  startFloatingHearts();
+}
+
+/* Floating Hearts Animation */
+function startFloatingHearts() {
+  setInterval(() => {
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
+    heart.innerText = "💖";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.animationDuration = (4 + Math.random() * 3) + "s";
+    document.body.appendChild(heart);
+
+    setTimeout(() => heart.remove(), 7000);
+  }, 400);
 }
 </script>
 </body>
