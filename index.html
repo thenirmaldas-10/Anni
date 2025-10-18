@@ -126,9 +126,9 @@
     align-items: center;
   }
 
-  /* Horizontally aligned MCQ options */
+  /* Force MCQ to appear horizontally */
   #options.mcq-horizontal {
-    display: flex;
+    display: flex !important;
     justify-content: center;
     gap: 15px;
     flex-wrap: wrap;
@@ -139,6 +139,7 @@
     border: 2px solid #ff99cc;
     border-radius: 10px;
     padding: 8px 16px;
+    cursor: pointer;
   }
 
   .photo-show {
@@ -159,11 +160,12 @@
   /* Floating Hearts Animation */
   .heart {
     position: fixed;
-    bottom: 0;
+    bottom: -20px;
     color: #ff4da6;
     font-size: 24px;
-    animation: floatUp 6s linear infinite;
+    animation: floatUp 6s linear forwards;
     pointer-events: none;
+    z-index: 9999;
   }
 
   @keyframes floatUp {
@@ -259,9 +261,8 @@ function loadQuestion() {
     optionsDiv.innerHTML = `<input type="date" id="dateAnswer">`;
   } else if (q.type === "mcq") {
     optionsDiv.className = "mcq-horizontal";
-    q.options.sort(() => Math.random() - 0.5);
     q.options.forEach(opt => {
-      optionsDiv.innerHTML += `<div><input type="radio" name="mcq" value="${opt}"> ${opt}</div>`;
+      optionsDiv.innerHTML += `<div><label><input type="radio" name="mcq" value="${opt}"> ${opt}</label></div>`;
     });
   } else {
     optionsDiv.className = "";
@@ -337,15 +338,14 @@ function showFinal() {
 
 /* Floating Hearts Animation */
 function startFloatingHearts() {
-  setInterval(() => {
+  const heartInterval = setInterval(() => {
     const heart = document.createElement("div");
     heart.classList.add("heart");
     heart.innerText = "💖";
     heart.style.left = Math.random() * 100 + "vw";
     heart.style.animationDuration = (4 + Math.random() * 3) + "s";
     document.body.appendChild(heart);
-
-    setTimeout(() => heart.remove(), 7000);
+    setTimeout(() => heart.remove(), 6000);
   }, 400);
 }
 </script>
