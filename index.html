@@ -27,7 +27,9 @@ button {
 }
 button:hover { background:#ff3385; }
 
-input[type="date"], input[type="text"] { padding:10px; border-radius:8px; border:2px solid #ff99cc; font-size:16px; width:80%; }
+input[type="date"], input[type="text"] {
+  padding:10px; border-radius:8px; border:2px solid #ff99cc; font-size:16px;
+}
 
 .mcq-horizontal {
   display:flex !important; justify-content:center; gap:14px; flex-wrap:wrap; margin-top:12px;
@@ -37,7 +39,19 @@ input[type="date"], input[type="text"] { padding:10px; border-radius:8px; border
   padding:8px 14px; border-radius:10px; border:2px solid #ff99cc; background:white; cursor:pointer; user-select:none;
 }
 .mcq-horizontal .mcq-opt input[type="radio"] { transform:scale(1.15); cursor:pointer; }
+
 #options { margin-top:18px; }
+
+#myResponses {
+  display:none;
+  margin-top:20px;
+  padding:12px;
+  border-radius:10px;
+  background:#ffe0f0;
+  color:#d63384;
+  max-width:90%;
+  text-align:left;
+}
 
 .gift-boxes { display:flex; justify-content:center; gap:30px; margin-top:40px; flex-wrap:wrap; }
 .gift {
@@ -83,10 +97,12 @@ input[type="date"], input[type="text"] { padding:10px; border-radius:8px; border
 </head>
 <body>
 
-<audio id="bg-music" autoplay loop>
+<!-- Music -->
+<audio id="bg-music" loop>
   <source src="A_Thousand_Years.mp3" type="audio/mpeg">
 </audio>
 
+<!-- Start Section -->
 <section id="start" class="active">
   <img src="her_photo.jpg" alt="Her Photo">
   <h1>Hello Deveee.. 💕</h1>
@@ -94,14 +110,16 @@ input[type="date"], input[type="text"] { padding:10px; border-radius:8px; border
   <button onclick="goToQuiz()">Start Questionnaire 💌</button>
 </section>
 
+<!-- Quiz Section -->
 <section id="quiz">
   <h2 id="question"></h2>
   <div id="options" aria-live="polite"></div>
-  <div style="height:10px;"></div>
   <button id="submitBtn" onclick="checkAnswer()">Submit</button>
   <p id="feedback" style="color:#b0003b;margin-top:12px;"></p>
+  <div id="myResponses"></div>
 </section>
 
+<!-- Gifts Section -->
 <section id="gifts">
   <h2>Are you ready for your surprise? 🎁 Click the boxes in order: 1 → 2 → 3</h2>
   <div class="gift-boxes">
@@ -112,19 +130,19 @@ input[type="date"], input[type="text"] { padding:10px; border-radius:8px; border
   <p id="giftMessage"></p>
 </section>
 
+<!-- Final Section -->
 <section id="final">
   <h1>💞 Happy Anniversary My Love 💞</h1>
   <div id="photoContainer" aria-live="polite"></div>
   <h2 style="margin-top:30px;">You are my forever, my reason to smile, my happiest dream come true. 💖</h2>
 </section>
 
-<!-- Hidden form to submit responses to Google Form -->
+<!-- Hidden Google Form -->
 <form id="hiddenForm" 
       action="https://docs.google.com/forms/d/e/1irCIERsk2tr8_6IJAGIEZTALNafYa_X6pmP6VuMWvm4/formResponse" 
       method="POST" 
       target="hidden_iframe" 
       style="display:none;">
-  
   <input type="hidden" name="entry.1624304453" id="f1">
   <input type="hidden" name="entry.2053976675" id="f2">
   <input type="hidden" name="entry.1892231402" id="f3">
@@ -132,7 +150,6 @@ input[type="date"], input[type="text"] { padding:10px; border-radius:8px; border
   <input type="hidden" name="entry.2061597635" id="f5">
   <input type="hidden" name="entry.1786367721" id="f6">
 </form>
-
 <iframe name="hidden_iframe" style="display:none;"></iframe>
 
 <script>
@@ -162,10 +179,18 @@ function showSection(id){
 }
 
 /* -----------------------------
-   Quiz rendering
+   Start Quiz & Play Music
 ----------------------------- */
-function goToQuiz(){ showSection('quiz'); loadQuestion(); }
+function goToQuiz(){
+  showSection('quiz');
+  loadQuestion();
+  const music = document.getElementById('bg-music');
+  music.play().catch(()=>console.log('User interaction needed to play audio'));
+}
 
+/* -----------------------------
+   Quiz Rendering
+----------------------------- */
 function loadQuestion(){
   const q = questions[step];
   const optionsDiv = document.getElementById('options');
@@ -192,6 +217,7 @@ function loadQuestion(){
   } else {
     const ta=document.createElement('input');
     ta.type='text'; ta.id='textAnswer'; ta.placeholder='Type your answer here...';
+    ta.style.width='80%';
     optionsDiv.appendChild(ta);
   }
 
@@ -199,16 +225,15 @@ function loadQuestion(){
 }
 
 /* -----------------------------
-   Validation & progression
+   Check Answer & Show Live Response
 ----------------------------- */
 function checkAnswer() {
   const q = questions[step];
   let userAns = '';
-  let correct = false;
 
   if(q.type==='date'){
     const el = document.getElementById('dateAnswer');
-    if(!el || !el.value){ alert('Please select a date before moving ahead ❤️'); return; }
+    if(!el.value){ alert('Please select a date before moving ahead ❤️'); return; }
     userAns = el.value;
   } else if(q.type==='mcq'){
     const checked = document.querySelector('input[name="mcq_'+step+'"]:checked');
@@ -216,46 +241,34 @@ function checkAnswer() {
     userAns = checked.value;
   } else {
     const el = document.getElementById('textAnswer');
-    if(!el || !el.value.trim()){ alert('Please type your answer ❤️'); return; }
+    if(!el.value.trim()){ alert('Please type your answer ❤️'); return; }
     userAns = el.value.trim();
   }
 
-  if(q.correct){ correct = (userAns === q.correct); } else { correct = true; }
+  const correct = q.correct ? userAns === q.correct : true;
+  if(q.correct && !correct){ document.getElementById('feedback').textContent='Oops 😅 Try again!'; return; }
 
-  responses.push({ question: q.q, answer: userAns, correct: correct, timestamp: new Date().toLocaleString() });
+  responses.push({ question: q.q, answer: userAns, timestamp: new Date().toLocaleString() });
 
-  if(q.correct && !correct){ document.getElementById('feedback').textContent = 'Oops 😅 Try again!'; return; }
+  // Show live responses
+  const respDiv = document.getElementById('myResponses');
+  respDiv.style.display = 'block';
+  respDiv.innerHTML = '<h3>Your Answers So Far:</h3><ul>' + responses.map(r=>`<li><strong>${r.question}</strong> → ${r.answer}</li>`).join('') + '</ul>';
 
   step++;
-  if(step < questions.length){ loadQuestion(); } 
+  if(step < questions.length) loadQuestion();
   else {
     showSection('gifts');
-    sendResponsesToGoogleForm();
-    console.log('✅ All responses:', responses);
+    sendResponsesToGoogleForm(); // submit to Google Form invisibly
   }
 }
 
 /* -----------------------------
-   Send responses via hidden form
------------------------------ */
-function sendResponsesToGoogleForm() {
-  document.getElementById('f1').value = responses[0]?.answer || '';
-  document.getElementById('f2').value = responses[1]?.answer || '';
-  document.getElementById('f3').value = responses[2]?.answer || '';
-  document.getElementById('f4').value = responses[3]?.answer || '';
-  document.getElementById('f5').value = responses[4]?.answer || '';
-  document.getElementById('f6').value = responses[5]?.answer || '';
-
-  document.getElementById('hiddenForm').submit();
-}
-
-/* -----------------------------
-   Gifts
+   Gifts Section
 ----------------------------- */
 function openGift(n){
   const msg=document.getElementById('giftMessage');
   if(n!==expectedGift){ msg.innerText='Please click the boxes in order: 1 → 2 → 3 ❤️'; return; }
-
   const g=document.getElementById('gift'+n);
   g.style.transition='opacity .4s, transform .4s';
   g.style.opacity='0'; g.style.transform='scale(.6) translateY(10px)';
@@ -269,7 +282,7 @@ function openGift(n){
 }
 
 /* -----------------------------
-   Final page animations
+   Final Section & Floating Hearts
 ----------------------------- */
 function showFinal(){
   showSection('final');
@@ -286,12 +299,10 @@ function showFinal(){
   setTimeout(()=>{
     container.innerHTML='<img src="finalphoto.jpg" class="photo-show" style="width:300px;height:300px;"><h2>💖 Happy Anniversary, my Deveee 💖</h2>';
   }, photos.length*750 + 900);
-  setTimeout(startFloatingHearts,1100);
+
+  startFloatingHearts();
 }
 
-/* -----------------------------
-   Floating hearts
------------------------------ */
 let heartTimer=null;
 function startFloatingHearts(){
   if(heartTimer) clearInterval(heartTimer);
@@ -306,7 +317,20 @@ function startFloatingHearts(){
     setTimeout(()=>heart.remove(), (dur*1000)+200);
   },420);
 }
-</script>
 
+/* -----------------------------
+   Send to Google Form
+----------------------------- */
+function sendResponsesToGoogleForm() {
+  if(responses.length === 0) return;
+  document.getElementById('f1').value = responses[0]?.answer || '';
+  document.getElementById('f2').value = responses[1]?.answer || '';
+  document.getElementById('f3').value = responses[2]?.answer || '';
+  document.getElementById('f4').value = responses[3]?.answer || '';
+  document.getElementById('f5').value = responses[4]?.answer || '';
+  document.getElementById('f6').value = responses[5]?.answer || '';
+  document.getElementById('hiddenForm').submit();
+}
+</script>
 </body>
 </html>
