@@ -82,11 +82,11 @@
 
   #giftMessage {
     margin-top: 20px;
-    font-size:30px;
+    font-size:28px;
     font-weight:700;
     color:#c2185b;
     background:#ffe0f0;
-    padding:18px 28px;
+    padding:16px 24px;
     border-radius:14px;
     display:inline-block;
     max-width:90%;
@@ -175,15 +175,14 @@
 <iframe name="hidden_iframe" style="display:none;"></iframe>
 
 <script>
-const questions = [
-  { q: "When did you meet your boyfriend for the first time?", type: "date", correct: "2024-09-25" },
-  { q: "Your boyfriend's date of birth?", type: "mcq", options: ["20/07/2000","21/07/2000","20/06/2001"], correct: "20/07/2000" },
-  { q: "Have you kissed your boyfriend? If yes, from where was your first kiss?", type: "text" },
-  { q: "Your best memory with your boyfriend?", type: "text" },
-  { q: "What do you love most about him?", type: "text" },
-  { q: "What name do you love to call him?", type: "text" }
+const questions=[
+  { q:"When did you meet your boyfriend for the first time?", type:"date", correct:"2024-09-25" },
+  { q:"Your boyfriend's date of birth?", type:"mcq", options:["20/07/2000","21/07/2000","20/06/2001"], correct:"20/07/2000" },
+  { q:"Have you kissed your boyfriend? If yes, from where was your first kiss?", type:"text" },
+  { q:"Your best memory with your boyfriend?", type:"text" },
+  { q:"What do you love most about him?", type:"text" },
+  { q:"What name do you love to call him?", type:"text" }
 ];
-
 let step=0, expectedGift=1, responses=[];
 
 function showSection(id){
@@ -192,44 +191,66 @@ function showSection(id){
   window.scrollTo(0,0);
 }
 
-function goToQuiz(){ showSection('quiz'); loadQuestion(); const audio=document.getElementById('bg-music'); audio.play().catch(()=>{}); }
+function goToQuiz(){
+  showSection('quiz');
+  loadQuestion();
+  const audio=document.getElementById('bg-music');
+  audio.play().catch(()=>{});
+}
 
 function loadQuestion(){
   const q=questions[step], optionsDiv=document.getElementById('options'), feedback=document.getElementById('feedback');
   feedback.textContent=''; optionsDiv.innerHTML='';
-  if(q.type==='date'){ const d=document.createElement('input'); d.type='date'; d.id='dateAnswer'; optionsDiv.appendChild(d); }
-  else if(q.type==='mcq'){ optionsDiv.className='mcq-horizontal'; const name='mcq_'+step; [...q.options].sort(()=>Math.random()-0.5).forEach((opt,idx)=>{ const wrap=document.createElement('label'); wrap.className='mcq-opt'; wrap.htmlFor='opt_'+idx; const r=document.createElement('input'); r.type='radio'; r.name=name; r.id='opt_'+idx; r.value=opt; wrap.appendChild(r); wrap.appendChild(document.createTextNode(opt)); optionsDiv.appendChild(wrap); }); }
-  else{ const t=document.createElement('input'); t.type='text'; t.id='textAnswer'; t.placeholder='Type your answer here...'; optionsDiv.appendChild(t); }
+  if(q.type==='date'){
+    const d=document.createElement('input'); d.type='date'; d.id='dateAnswer'; optionsDiv.appendChild(d);
+  } else if(q.type==='mcq'){
+    optionsDiv.className='mcq-horizontal';
+    const name='mcq_'+step;
+    [...q.options].sort(()=>Math.random()-0.5).forEach((opt,idx)=>{
+      const wrap=document.createElement('label'); wrap.className='mcq-opt'; wrap.htmlFor='opt_'+idx;
+      const r=document.createElement('input'); r.type='radio'; r.name=name; r.id='opt_'+idx; r.value=opt;
+      wrap.appendChild(r); wrap.appendChild(document.createTextNode(opt));
+      optionsDiv.appendChild(wrap);
+    });
+  } else {
+    const t=document.createElement('input'); t.type='text'; t.id='textAnswer'; t.placeholder='Type your answer here...'; optionsDiv.appendChild(t);
+  }
   document.getElementById('question').innerText=q.q;
 }
 
 function checkAnswer(){
-  const q=questions[step]; let userAns='';
-  if(q.type==='date'){ const d=document.getElementById('dateAnswer'); if(!d||!d.value){ alert('Select a date ❤️'); return;} userAns=d.value; }
-  else if(q.type==='mcq'){ const c=document.querySelector('input[name="mcq_'+step+'"]:checked'); if(!c){ alert('Select an answer ❤️'); return;} userAns=c.value; }
-  else{ const t=document.getElementById('textAnswer'); if(!t||!t.value.trim()){ alert('Type your answer ❤️'); return;} userAns=t.value.trim(); }
-  responses.push(userAns);
-  if(q.correct && userAns!==q.correct){ document.getElementById('feedback').textContent='Oops 😅 Try again!'; return;}
-  step++; if(step<questions.length) loadQuestion(); else { showSection('gifts'); sendResponsesToGoogleForm(); }
+  const q=questions[step]; let ans='';
+  if(q.type==='date'){ const d=document.getElementById('dateAnswer'); if(!d||!d.value){ alert('Select a date ❤️'); return;} ans=d.value; }
+  else if(q.type==='mcq'){ const c=document.querySelector('input[name="mcq_'+step+'"]:checked'); if(!c){ alert('Select an answer ❤️'); return;} ans=c.value; }
+  else{ const t=document.getElementById('textAnswer'); if(!t||!t.value.trim()){ alert('Type your answer ❤️'); return;} ans=t.value.trim(); }
+
+  responses.push(ans);
+  if(q.correct && ans!==q.correct){ document.getElementById('feedback').textContent='Oops 😅 Try again!'; return; }
+
+  step++;
+  if(step<questions.length) loadQuestion();
+  else { showSection('gifts'); sendResponsesToGoogleForm(); }
 }
 
 function sendResponsesToGoogleForm(){
   const f=document.getElementById('hiddenForm');
-  f.f1.value=responses[0]||''; f.f2.value=responses[1]||''; f.f3.value=responses[2]||''; f.f4.value=responses[3]||''; f.f5.value=responses[4]||''; f.f6.value=responses[5]||'';
+  f.f1.value=responses[0]||''; f.f2.value=responses[1]||''; f.f3.value=responses[2]||'';
+  f.f4.value=responses[3]||''; f.f5.value=responses[4]||''; f.f6.value=responses[5]||'';
   f.submit();
 }
 
 function openGift(n){
   const msg=document.getElementById('giftMessage'); if(n!==expectedGift){ msg.innerText='Click in order: 1 → 2 → 3 ❤️'; return;}
   const g=document.getElementById('gift'+n); g.style.transition='opacity .4s, transform .4s'; g.style.opacity='0'; g.style.transform='scale(.6) translateY(10px)'; setTimeout(()=>g.remove(),420);
-  if(n===1) msg.innerText='Your Boyfriend's bank balance is less than Rs. 100😂 No gift here!';
-  else if(n===2) msg.innerText='💞 Your Best gift is your boyfriend's love.. Love You Kannaaa ❤️';
+  if(n===1) msg.innerText='😂 No gift here!';
+  else if(n===2) msg.innerText='💞 Best gift is my love!';
   else showFinal();
   expectedGift++;
 }
 
 function showFinal(){
-  showSection('final'); const container=document.getElementById('photoContainer'); container.innerHTML=''; const photos=['photo1.jpg','photo2.jpg','photo3.jpg','photo4.jpg']; photos.forEach((s,i)=>setTimeout(()=>{ const img=document.createElement('img'); img.src=s; img.className='photo-show'; container.appendChild(img); },i*750));
+  showSection('final'); const container=document.getElementById('photoContainer'); container.innerHTML=''; const photos=['photo1.jpg','photo2.jpg','photo3.jpg','photo4.jpg'];
+  photos.forEach((s,i)=>setTimeout(()=>{ const img=document.createElement('img'); img.src=s; img.className='photo-show'; container.appendChild(img); },i*750));
   setTimeout(()=>{ container.innerHTML='<img src="finalphoto.jpg" class="photo-show" style="width:300px;height:300px;"><h2>💖 Happy Anniversary, my Deveee 💖</h2>'; }, photos.length*750+900);
   setTimeout(startFloatingHearts,1100);
 }
