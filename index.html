@@ -5,55 +5,42 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Hello Deveee 💖</title>
 <style>
+  /* --- Your original styles unchanged --- */
   * { box-sizing: border-box; }
-  body {
-    font-family: 'Poppins', sans-serif;
-    margin: 0;
-    padding: 0;
-    background: linear-gradient(135deg,#ffe6f0,#e6ccff);
-    color: #d63384;
-    text-align: center;
-    overflow-x: hidden;
-  }
-  section { display: none; min-height:100vh; width:100%; padding:40px 20px; justify-content:center; align-items:center; flex-direction:column; }
+  body { font-family: 'Poppins',sans-serif; margin:0; padding:0; background:linear-gradient(135deg,#ffe6f0,#e6ccff); color:#d63384; text-align:center; overflow-x:hidden; }
+  section { display:none; min-height:100vh; width:100%; padding:40px 20px; justify-content:center; align-items:center; flex-direction:column; }
   section.active { display:flex; animation: fadeIn .6s ease forwards; }
-  @keyframes fadeIn { from {opacity:0; transform:translateY(10px)} to {opacity:1; transform:translateY(0)} }
-
+  @keyframes fadeIn { from {opacity:0; transform:translateY(10px);} to {opacity:1; transform:translateY(0);} }
   #start img { width:90%; max-width:400px; border-radius:20px; margin-top:40px; box-shadow:0 8px 20px rgba(0,0,0,.2); }
   h1 { margin-top:20px; }
   button { background:#ff66b2; color:white; border:none; border-radius:10px; padding:12px 28px; font-size:16px; margin:10px; cursor:pointer; transition:.25s; }
   button:hover { background:#ff3385; }
-
   input[type="date"] { padding:10px; border-radius:8px; border:2px solid #ff99cc; font-size:16px; }
   .mcq-horizontal { display:flex !important; justify-content:center; gap:14px; flex-wrap:wrap; margin-top:12px; }
   .mcq-horizontal .mcq-opt { display:flex; align-items:center; gap:8px; padding:8px 14px; border-radius:10px; border:2px solid #ff99cc; background:white; cursor:pointer; user-select:none; }
   .mcq-horizontal .mcq-opt input[type="radio"] { transform:scale(1.15); cursor:pointer; }
   #options { margin-top:18px; }
-
   .gift-boxes { display:flex; justify-content:center; gap:30px; margin-top:40px; flex-wrap:wrap; }
   .gift { width:100px; height:100px; background:pink; border:3px solid #ff66b2; border-radius:15px; position:relative; cursor:pointer; display:flex; justify-content:center; align-items:center; font-size:30px; transition: transform .25s, box-shadow .25s, opacity .25s; }
   .gift:hover { transform: translateY(-8px) rotate(4deg); box-shadow:0 8px 20px rgba(255,102,178,0.4); }
   .gift-number { position:absolute; top:6px; left:6px; font-size:16px; font-weight:700; color:white; background:#ff3385; border-radius:50%; width:26px; height:26px; display:flex; align-items:center; justify-content:center; }
-
   #giftMessage { margin-top:18px; font-size:22px; font-weight:700; color:#c2185b; background:#ffe0f0; padding:16px 24px; border-radius:12px; display:inline-block; max-width:90%; line-height:1.4; text-align:center; }
-
   .photo-show { width:200px; height:200px; border-radius:20px; margin:10px; object-fit:cover; opacity:0; transform:scale(.6); animation: appear .9s forwards; }
   @keyframes appear { to { opacity:1; transform:scale(1) } }
-
   #final { position:relative; z-index:1; padding-bottom:80px; }
-
   .floating-heart { position: fixed; bottom: -20px; font-size: 26px; pointer-events: none; z-index: 99999; animation-name: floatUp; animation-timing-function: linear; animation-iteration-count: 1; will-change: transform, opacity; }
-  @keyframes floatUp { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-110vh) scale(1.4); opacity: 0; } }
-
+  @keyframes floatUp { 0% { transform: translateY(0) scale(1); opacity:1; } 100% { transform: translateY(-110vh) scale(1.4); opacity:0; } }
   @media (max-width:420px) { .mcq-horizontal .mcq-opt { padding:8px 10px; font-size:14px } .photo-show { width:140px; height:140px } .gift { width:84px; height:84px; font-size:24px } }
 </style>
 </head>
 <body>
 
+<!-- Music -->
 <audio id="bg-music" loop>
   <source src="A_Thousand_Years.mp3" type="audio/mpeg">
 </audio>
 
+<!-- Pages -->
 <section id="start" class="active">
   <img src="her_photo.jpg" alt="Her Photo">
   <h1>Hello Deveee.. 💕</h1>
@@ -97,6 +84,7 @@
 <iframe name="hidden_iframe" style="display:none;"></iframe>
 
 <script>
+/* ----------------------------- DATA ----------------------------- */
 const questions=[
   { q:"When did you meet your boyfriend for the first time?", type:"date", correct:"2024-09-25" },
   { q:"Your boyfriend's date of birth?", type:"mcq", options:["20/07/2000","21/07/2000","20/06/2001"], correct:"20/07/2000" },
@@ -108,14 +96,16 @@ const questions=[
 
 let step=0, expectedGift=1, responses=[];
 
+/* ----------------------------- NAVIGATION ----------------------------- */
 function showSection(id){ document.querySelectorAll('section').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); window.scrollTo(0,0); }
-function goToQuiz(){ showSection('quiz'); loadQuestion(); }
+function goToQuiz(){ showSection('quiz'); loadQuestion(); document.getElementById('bg-music').play().catch(()=>{}); }
 
+/* ----------------------------- QUIZ ----------------------------- */
 function loadQuestion(){
   const q=questions[step], optionsDiv=document.getElementById('options'), feedback=document.getElementById('feedback');
-  feedback.textContent=''; optionsDiv.innerHTML='';
-  if(q.type==='date'){ const input=document.createElement('input'); input.type='date'; input.id='dateAnswer'; input.style.padding='12px'; input.style.borderRadius='10px'; input.style.border='2px solid #ff99cc'; input.style.fontSize='16px'; optionsDiv.appendChild(input); }
-  else if(q.type==='mcq'){ optionsDiv.className='mcq-horizontal'; const name='mcq_'+step; [...q.options].sort(()=>Math.random()-0.5).forEach((opt,idx)=>{ const wrap=document.createElement('label'); wrap.className='mcq-opt'; wrap.htmlFor='opt_'+idx; const radio=document.createElement('input'); radio.type='radio'; radio.name=name; radio.id='opt_'+idx; radio.value=opt; wrap.appendChild(radio); wrap.appendChild(document.createTextNode(opt)); optionsDiv.appendChild(wrap); }); }
+  optionsDiv.innerHTML=''; feedback.textContent='';
+  if(q.type==='date'){ const input=document.createElement('input'); input.type='date'; input.id='dateAnswer'; input.style.padding='12px'; input.style.borderRadius='10px'; input.style.border='2px solid #ff99cc'; input.style.fontSize='16px'; optionsDiv.appendChild(input);}
+  else if(q.type==='mcq'){ optionsDiv.className='mcq-horizontal'; const name='mcq_'+step; [...q.options].sort(()=>Math.random()-0.5).forEach((opt,idx)=>{ const wrap=document.createElement('label'); wrap.className='mcq-opt'; wrap.htmlFor='opt_'+idx; const radio=document.createElement('input'); radio.type='radio'; radio.name=name; radio.id='opt_'+idx; radio.value=opt; wrap.appendChild(radio); wrap.appendChild(document.createTextNode(opt)); optionsDiv.appendChild(wrap);}); }
   else { const input=document.createElement('input'); input.type='text'; input.id='textAnswer'; input.placeholder='Type your answer here...'; input.style.padding='12px'; input.style.borderRadius='10px'; input.style.border='2px solid #ff99cc'; input.style.fontSize='16px'; input.style.width='80%'; optionsDiv.appendChild(input); }
   document.getElementById('question').innerText=q.q;
 }
@@ -126,15 +116,24 @@ function checkAnswer(){
   else if(q.type==='mcq'){ const checked=document.querySelector(`input[name="mcq_${step}"]:checked`); if(!checked){ alert('Please select an answer ❤️'); return; } ans=checked.value; }
   else { const el=document.getElementById('textAnswer'); if(!el.value.trim()){ alert('Please type your answer ❤️'); return; } ans=el.value.trim(); }
   responses.push(ans);
-  step++; if(step<questions.length) loadQuestion(); else { showSection('gifts'); submitToGoogleForm(); }
+  step++; if(step<questions.length) loadQuestion(); else { submitToGoogleForm(); showSection('gifts'); }
 }
 
+/* ----------------------------- GOOGLE FORM SUBMISSION ----------------------------- */
 function submitToGoogleForm(){
-  document.getElementById('f1').value=responses[0]||''; document.getElementById('f2').value=responses[1]||''; document.getElementById('f3').value=responses[2]||''; document.getElementById('f4').value=responses[3]||''; document.getElementById('f5').value=responses[4]||''; document.getElementById('f6').value=responses[5]||''; document.getElementById('hiddenForm').submit();
+  document.getElementById('f1').value=responses[0]||'';
+  document.getElementById('f2').value=responses[1]||'';
+  document.getElementById('f3').value=responses[2]||'';
+  document.getElementById('f4').value=responses[3]||'';
+  document.getElementById('f5').value=responses[4]||'';
+  document.getElementById('f6').value=responses[5]||'';
+  document.getElementById('hiddenForm').submit();
 }
 
+/* ----------------------------- GIFTS ----------------------------- */
 function openGift(n){
-  const msg=document.getElementById('giftMessage'); msg.style.fontSize='22px'; msg.style.fontWeight='700';
+  const msg=document.getElementById('giftMessage');
+  msg.style.fontSize='22px'; msg.style.fontWeight='700';
   if(n!==expectedGift){ msg.innerText='Please click the boxes in order: 1 → 2 → 3 ❤️'; return; }
   const g=document.getElementById('gift'+n); g.style.transition='opacity .4s, transform .4s'; g.style.opacity='0'; g.style.transform='scale(.6) translateY(10px)'; setTimeout(()=>g.remove(),420);
   if(n===1) msg.innerText='😂 Your boyfriend’s bank balance is less than ₹100! So, No Gift Here';
@@ -142,14 +141,33 @@ function openGift(n){
   else showFinal(); expectedGift++;
 }
 
-// showFinal(), startFloatingHearts() remain identical to your original working code
+/* ----------------------------- FINAL PHOTOS & HEARTS ----------------------------- */
+function showFinal(){
+  showSection('final');
+  const container=document.getElementById('photoContainer');
+  container.innerHTML='';
+  const photos=['photo1.jpg','photo2.jpg','photo3.jpg','photo4.jpg'];
+  photos.forEach((src,i)=>setTimeout(()=>{ const img=document.createElement('img'); img.src=src; img.className='photo-show'; container.appendChild(img); }, i*750));
+  setTimeout(()=>{ container.innerHTML='<img src="finalphoto.jpg" class="photo-show" style="width:300px;height:300px;"><h2>💖 Happy Anniversary, my Deveee 💖</h2>'; }, photos.length*750+900);
+  setTimeout(startFloatingHearts,1100);
+}
 
-// Music autoplay fallback
+let heartTimer=null;
+function startFloatingHearts(){
+  if(heartTimer) clearInterval(heartTimer);
+  heartTimer=setInterval(()=>{
+    const heart=document.createElement('div'); heart.className='floating-heart'; heart.textContent='💖';
+    heart.style.left=(6+Math.random()*86)+'vw';
+    const dur=4.5+Math.random()*2.5; heart.style.animationDuration=dur+'s';
+    document.body.appendChild(heart); setTimeout(()=>heart.remove(),dur*1000+200);
+  },420);
+}
+
+/* ----------------------------- MUSIC AUTOPLAY FALLBACK ----------------------------- */
 document.addEventListener('DOMContentLoaded',()=>{
   const audio=document.getElementById('bg-music');
   audio.play().catch(()=>{
-    const prompt=document.createElement('div');
-    prompt.innerHTML='🔊 Tap anywhere to enable music';
+    const prompt=document.createElement('div'); prompt.innerHTML='🔊 Tap anywhere to enable music';
     Object.assign(prompt.style,{position:'fixed',left:'50%',top:'12%',transform:'translateX(-50%)',background:'rgba(255,255,255,0.92)',padding:'8px 14px',borderRadius:'999px',zIndex:99998,color:'#d63384',border:'1px solid #ff99cc',cursor:'pointer'});
     document.body.appendChild(prompt);
     const enable=()=>{ audio.play().catch(()=>{}); prompt.remove(); document.removeEventListener('click',enable); };
