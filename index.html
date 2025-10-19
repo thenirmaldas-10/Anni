@@ -280,6 +280,19 @@ function checkAnswer(){
     userAns = el.value.trim();
   }
 
+ function sendResponsesToGoogleSheet(){
+  if(responses.length === 0) return; // nothing to send
+
+  fetch('https://script.google.com/macros/s/AKfycbx6Kr7wN3Nfa0kWc2Cje5nxWQ88L6GRmfgmlFDk3nERpVfzjidgbjzI-LhExEn0BD-xdw/exec', {  // replace this with your Web App URL
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ responses }) // sending all recorded responses
+  })
+  .then(res => res.json())
+  .then(data => console.log('Google Sheet response:', data))
+  .catch(err => console.error('Error sending to Google Sheet:', err));
+}
+
   // determine correctness
   if(q.correct){
     correct = (userAns === q.correct);
@@ -303,12 +316,18 @@ function checkAnswer(){
   }
 
   // Move to next question
-  step++;
-  if(step < questions.length) {
-    loadQuestion();
-  } else {
-    console.log('✅ All responses:', responses);
-    showSection('gifts');
+ step++;
+if(step < questions.length) {
+  loadQuestion();
+} else {
+  // Show Gifts section
+  showSection('gifts');
+
+  // Send all recorded responses to Google Sheet
+  sendResponsesToGoogleSheet();
+
+  // Optional: log to console for debugging
+  console.log('✅ All responses:', responses);
   }
 }
 
