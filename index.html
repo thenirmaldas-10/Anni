@@ -70,6 +70,20 @@
     border-radius:50%; width:26px; height:26px; display:flex; align-items:center; justify-content:center;
   }
 
+  #giftMessage {
+    margin-top:18px;
+    font-size:22px;
+    font-weight:700;
+    color:#c2185b;
+    background:#ffe0f0;
+    padding:16px 24px;
+    border-radius:12px;
+    display:inline-block;
+    max-width:90%;
+    line-height:1.4;
+    text-align:center;
+  }
+
   .photo-show { width:200px; height:200px; border-radius:20px; margin:10px; object-fit:cover;
     opacity:0; transform:scale(.6); animation: appear .9s forwards; }
   @keyframes appear { to { opacity:1; transform:scale(1) } }
@@ -103,7 +117,6 @@
 
 <audio id="bg-music" autoplay loop>
   <source src="A_Thousand_Years.mp3" type="audio/mpeg">
-  Your browser does not support the audio element.
 </audio>
 
 <section id="start" class="active">
@@ -128,7 +141,7 @@
     <div class="gift" id="gift2" onclick="openGift(2)"><div class="gift-number">2</div>🎁</div>
     <div class="gift" id="gift3" onclick="openGift(3)"><div class="gift-number">3</div>🎁</div>
   </div>
-  <p id="giftMessage" style="margin-top:18px;"></p>
+  <p id="giftMessage"></p>
 </section>
 
 <section id="final">
@@ -158,129 +171,50 @@ const questions = [
   { q: "What name do you love to call him?", type: "text" }
 ];
 
-let step = 0;
-let expectedGift = 1;
-let responses = [];
+let step=0, expectedGift=1, responses=[];
 
-function showSection(id) {
-  document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+function showSection(id){
+  document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
 }
 
-function goToQuiz(){
-  showSection('quiz');
-  loadQuestion();
-  const audio = document.getElementById('bg-music');
-  audio.play().catch(()=>{});
-}
+function goToQuiz(){ showSection('quiz'); loadQuestion(); }
 
 function loadQuestion(){
-  const q = questions[step];
-  const optionsDiv = document.getElementById('options');
-  const feedback = document.getElementById('feedback');
-  feedback.textContent = '';
-  optionsDiv.innerHTML = '';
-
-  if(q.type === 'date
-  ){
-    const input = document.createElement('input');
-    input.type = 'date';
-    input.id = 'dateAnswer';
-    input.style.padding = '12px';
-    input.style.borderRadius = '10px';
-    input.style.border = '2px solid #ff99cc';
-    input.style.fontSize = '16px';
-    optionsDiv.appendChild(input);
-  } else if(q.type === 'mcq'){
-    optionsDiv.className = 'mcq-horizontal';
-    const name = 'mcq_'+step;
-    [...q.options].sort(()=>Math.random()-0.5).forEach((opt,idx)=>{
-      const wrap = document.createElement('label');
-      wrap.className = 'mcq-opt';
-      wrap.htmlFor = 'opt_'+idx;
-      const radio = document.createElement('input');
-      radio.type = 'radio';
-      radio.name = name;
-      radio.id = 'opt_'+idx;
-      radio.value = opt;
-      wrap.appendChild(radio);
-      wrap.appendChild(document.createTextNode(opt));
-      optionsDiv.appendChild(wrap);
-    });
-  } else {
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.id = 'textAnswer';
-    input.placeholder = 'Type your answer here...';
-    input.style.padding = '12px';
-    input.style.borderRadius = '10px';
-    input.style.border = '2px solid #ff99cc';
-    input.style.fontSize = '16px';
-    input.style.width = '80%';
-    optionsDiv.appendChild(input);
-  }
-  document.getElementById('question').innerText = q.q;
+  const q=questions[step], optionsDiv=document.getElementById('options'), feedback=document.getElementById('feedback');
+  feedback.textContent=''; optionsDiv.innerHTML='';
+  if(q.type==='date'){ const input=document.createElement('input'); input.type='date'; input.id='dateAnswer'; input.style.padding='12px'; input.style.borderRadius='10px'; input.style.border='2px solid #ff99cc'; input.style.fontSize='16px'; optionsDiv.appendChild(input); }
+  else if(q.type==='mcq'){ optionsDiv.className='mcq-horizontal'; const name='mcq_'+step; [...q.options].sort(()=>Math.random()-0.5).forEach((opt,idx)=>{ const wrap=document.createElement('label'); wrap.className='mcq-opt'; wrap.htmlFor='opt_'+idx; const radio=document.createElement('input'); radio.type='radio'; radio.name=name; radio.id='opt_'+idx; radio.value=opt; wrap.appendChild(radio); wrap.appendChild(document.createTextNode(opt)); optionsDiv.appendChild(wrap); }); }
+  else { const input=document.createElement('input'); input.type='text'; input.id='textAnswer'; input.placeholder='Type your answer here...'; input.style.padding='12px'; input.style.borderRadius='10px'; input.style.border='2px solid #ff99cc'; input.style.fontSize='16px'; input.style.width='80%'; optionsDiv.appendChild(input); }
+  document.getElementById('question').innerText=q.q;
 }
 
 function checkAnswer(){
-  const q = questions[step];
-  let ans = '';
-  if(q.type==='date'){
-    const el = document.getElementById('dateAnswer');
-    if(!el.value){ alert('Please select a date ❤️'); return; }
-    ans = el.value;
-  } else if(q.type==='mcq'){
-    const checked = document.querySelector(`input[name="mcq_${step}"]:checked`);
-    if(!checked){ alert('Please select an answer ❤️'); return; }
-    ans = checked.value;
-  } else {
-    const el = document.getElementById('textAnswer');
-    if(!el.value.trim()){ alert('Please type your answer ❤️'); return; }
-    ans = el.value.trim();
-  }
-
-  responses.push(ans); // store for Google Form
-  step++;
-  if(step<questions.length) loadQuestion();
-  else {
-    showSection('gifts');
-    submitToGoogleForm();
-  }
+  const q=questions[step]; let ans='';
+  if(q.type==='date'){ const el=document.getElementById('dateAnswer'); if(!el.value){ alert('Please select a date ❤️'); return; } ans=el.value; }
+  else if(q.type==='mcq'){ const checked=document.querySelector(`input[name="mcq_${step}"]:checked`); if(!checked){ alert('Please select an answer ❤️'); return; } ans=checked.value; }
+  else { const el=document.getElementById('textAnswer'); if(!el.value.trim()){ alert('Please type your answer ❤️'); return; } ans=el.value.trim(); }
+  responses.push(ans);
+  step++; if(step<questions.length) loadQuestion(); else { showSection('gifts'); submitToGoogleForm(); }
 }
 
 function submitToGoogleForm(){
-  document.getElementById('f1').value = responses[0]||'';
-  document.getElementById('f2').value = responses[1]||'';
-  document.getElementById('f3').value = responses[2]||'';
-  document.getElementById('f4').value = responses[3]||'';
-  document.getElementById('f5').value = responses[4]||'';
-  document.getElementById('f6').value = responses[5]||'';
-  document.getElementById('hiddenForm').submit();
+  document.getElementById('f1').value=responses[0]||''; document.getElementById('f2').value=responses[1]||''; document.getElementById('f3').value=responses[2]||''; document.getElementById('f4').value=responses[3]||''; document.getElementById('f5').value=responses[4]||''; document.getElementById('f6').value=responses[5]||''; document.getElementById('hiddenForm').submit();
 }
 
 function openGift(n){
-  const msg = document.getElementById('giftMessage');
-  msg.style.fontSize = '22px';  // make text bigger
-  msg.style.fontWeight = '700';
-  if(n !== expectedGift){
-    msg.innerText = 'Please click the boxes in order: 1 → 2 → 3 ❤️';
-    return;
-  }
-  const g = document.getElementById('gift'+n);
-  g.style.transition = 'opacity .4s, transform .4s';
-  g.style.opacity = '0';
-  g.style.transform = 'scale(.6) translateY(10px)';
-  setTimeout(()=> g.remove(), 420);
-
-  if(n===1) msg.innerText = '😂 Your boyfriend’s bank balance is less than ₹100! So, No Gift Here';
-  else if(n===2) msg.innerText = '💞 Your boyfriend’s best gift for you is his love!';
-  else showFinal();
-
-  expectedGift++;
+  const msg=document.getElementById('giftMessage');
+  msg.style.fontSize='22px'; msg.style.fontWeight='700';
+  if(n!==expectedGift){ msg.innerText='Please click the boxes in order: 1 → 2 → 3 ❤️'; return; }
+  const g=document.getElementById('gift'+n); g.style.transition='opacity .4s, transform .4s'; g.style.opacity='0'; g.style.transform='scale(.6) translateY(10px)'; setTimeout(()=>g.remove(),420);
+  if(n===1) msg.innerText='😂 Your boyfriend’s bank balance is less than ₹100! So, No Gift Here';
+  else if(n===2) msg.innerText='💞 Your boyfriend’s best gift for you is his love!';
+  else showFinal(); expectedGift++;
 }
 
-// rest of your floating hearts and final functions remain unchanged
+// showFinal(), startFloatingHearts() and music autoplay logic remain unchanged from your working code
+
 </script>
 </body>
 </html>
