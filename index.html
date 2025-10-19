@@ -100,6 +100,26 @@
     .photo-show { width:140px; height:140px }
     .gift { width:84px; height:84px; font-size:24px }
   }
+ #giftMessage {
+  margin-top: 20px;
+  font-size: 22px;
+  font-weight: 600;
+  color: #c2185b;
+  background: #ffe0f0;
+  padding: 16px 24px;
+  border-radius: 12px;
+  display: inline-block;
+  animation: popIn .5s ease;
+  max-width: 90%;
+  line-height: 1.4;
+  text-align: center;
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+
 </style>
 </head>
 <body>
@@ -135,7 +155,7 @@
     <div class="gift" id="gift2" onclick="openGift(2)"><div class="gift-number">2</div>🎁</div>
     <div class="gift" id="gift3" onclick="openGift(3)"><div class="gift-number">3</div>🎁</div>
   </div>
-  <p id="giftMessage" style="margin-top:18px;"></p>
+  <p id="giftMessage"></p>
 </section>
 
 <!-- Final Animation Page -->
@@ -160,6 +180,8 @@ const questions = [
 
 let step = 0;
 let expectedGift = 1;
+ // New: response tracking
+const responses = [];
 
 /* -----------------------------
    Navigation helpers
@@ -242,6 +264,8 @@ function loadQuestion(){
 function checkAnswer(){
   const q = questions[step];
   let userAns = '';
+  let correct = false;
+
   if(q.type === 'date'){
     const el = document.getElementById('dateAnswer');
     if(!el || !el.value) { alert('Please select a date before moving ahead ❤️'); return; }
@@ -256,14 +280,36 @@ function checkAnswer(){
     userAns = el.value.trim();
   }
 
-  if(q.correct && userAns !== q.correct){
+  // determine correctness
+  if(q.correct){
+    correct = (userAns === q.correct);
+  } else {
+    correct = true; // text questions are open-ended
+  }
+
+  // Log the response
+  responses.push({
+    question: q.q,
+    answer: userAns,
+    correct: correct,
+    timestamp: new Date().toLocaleString()
+  });
+
+  // Show feedback
+  if(q.correct && !correct){
     document.getElementById('feedback').textContent = 'Oops 😅 Try again!';
+    console.log('❌ Wrong answer:', userAns, 'for question:', q.q);
     return;
   }
 
+  // Move to next question
   step++;
-  if(step < questions.length) loadQuestion();
-  else showSection('gifts');
+  if(step < questions.length) {
+    loadQuestion();
+  } else {
+    console.log('✅ All responses:', responses);
+    showSection('gifts');
+  }
 }
 
 /* -----------------------------
