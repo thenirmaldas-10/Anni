@@ -15,107 +15,42 @@
     text-align: center;
     overflow-x: hidden;
   }
-
-  section {
-    display: none;
-    min-height: 100vh;
-    width: 100%;
-    padding: 40px 20px;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-  }
-  section.active { display: flex; animation: fadeIn .6s ease forwards; }
+  section { display: none; min-height:100vh; width:100%; padding:40px 20px; justify-content:center; align-items:center; flex-direction:column; }
+  section.active { display:flex; animation: fadeIn .6s ease forwards; }
   @keyframes fadeIn { from {opacity:0; transform:translateY(10px)} to {opacity:1; transform:translateY(0)} }
 
   #start img { width:90%; max-width:400px; border-radius:20px; margin-top:40px; box-shadow:0 8px 20px rgba(0,0,0,.2); }
   h1 { margin-top:20px; }
-  button {
-    background:#ff66b2; color:white; border:none; border-radius:10px;
-    padding:12px 28px; font-size:16px; margin:10px; cursor:pointer; transition:.25s;
-  }
+  button { background:#ff66b2; color:white; border:none; border-radius:10px; padding:12px 28px; font-size:16px; margin:10px; cursor:pointer; transition:.25s; }
   button:hover { background:#ff3385; }
 
   input[type="date"] { padding:10px; border-radius:8px; border:2px solid #ff99cc; font-size:16px; }
-  .mcq-horizontal {
-    display:flex !important;
-    justify-content:center;
-    gap:14px;
-    flex-wrap:wrap;
-    margin-top:12px;
-  }
-  .mcq-horizontal .mcq-opt {
-    display:flex;
-    align-items:center;
-    gap:8px;
-    padding:8px 14px;
-    border-radius:10px;
-    border:2px solid #ff99cc;
-    background: white;
-    cursor:pointer;
-    user-select:none;
-  }
+  .mcq-horizontal { display:flex !important; justify-content:center; gap:14px; flex-wrap:wrap; margin-top:12px; }
+  .mcq-horizontal .mcq-opt { display:flex; align-items:center; gap:8px; padding:8px 14px; border-radius:10px; border:2px solid #ff99cc; background:white; cursor:pointer; user-select:none; }
   .mcq-horizontal .mcq-opt input[type="radio"] { transform:scale(1.15); cursor:pointer; }
   #options { margin-top:18px; }
 
   .gift-boxes { display:flex; justify-content:center; gap:30px; margin-top:40px; flex-wrap:wrap; }
-  .gift {
-    width:100px; height:100px; background:pink; border:3px solid #ff66b2; border-radius:15px;
-    position:relative; cursor:pointer; display:flex; justify-content:center; align-items:center; font-size:30px;
-    transition: transform .25s, box-shadow .25s, opacity .25s;
-  }
+  .gift { width:100px; height:100px; background:pink; border:3px solid #ff66b2; border-radius:15px; position:relative; cursor:pointer; display:flex; justify-content:center; align-items:center; font-size:30px; transition: transform .25s, box-shadow .25s, opacity .25s; }
   .gift:hover { transform: translateY(-8px) rotate(4deg); box-shadow:0 8px 20px rgba(255,102,178,0.4); }
-  .gift-number {
-    position:absolute; top:6px; left:6px; font-size:16px; font-weight:700; color:white; background:#ff3385;
-    border-radius:50%; width:26px; height:26px; display:flex; align-items:center; justify-content:center;
-  }
+  .gift-number { position:absolute; top:6px; left:6px; font-size:16px; font-weight:700; color:white; background:#ff3385; border-radius:50%; width:26px; height:26px; display:flex; align-items:center; justify-content:center; }
 
-  #giftMessage {
-    margin-top:18px;
-    font-size:22px;
-    font-weight:700;
-    color:#c2185b;
-    background:#ffe0f0;
-    padding:16px 24px;
-    border-radius:12px;
-    display:inline-block;
-    max-width:90%;
-    line-height:1.4;
-    text-align:center;
-  }
+  #giftMessage { margin-top:18px; font-size:22px; font-weight:700; color:#c2185b; background:#ffe0f0; padding:16px 24px; border-radius:12px; display:inline-block; max-width:90%; line-height:1.4; text-align:center; }
 
-  .photo-show { width:200px; height:200px; border-radius:20px; margin:10px; object-fit:cover;
-    opacity:0; transform:scale(.6); animation: appear .9s forwards; }
+  .photo-show { width:200px; height:200px; border-radius:20px; margin:10px; object-fit:cover; opacity:0; transform:scale(.6); animation: appear .9s forwards; }
   @keyframes appear { to { opacity:1; transform:scale(1) } }
 
   #final { position:relative; z-index:1; padding-bottom:80px; }
 
-  .floating-heart {
-    position: fixed;
-    bottom: -20px;
-    font-size: 26px;
-    pointer-events: none;
-    z-index: 99999;
-    animation-name: floatUp;
-    animation-timing-function: linear;
-    animation-iteration-count: 1;
-    will-change: transform, opacity;
-  }
-  @keyframes floatUp {
-    0% { transform: translateY(0) scale(1); opacity: 1; }
-    100% { transform: translateY(-110vh) scale(1.4); opacity: 0; }
-  }
+  .floating-heart { position: fixed; bottom: -20px; font-size: 26px; pointer-events: none; z-index: 99999; animation-name: floatUp; animation-timing-function: linear; animation-iteration-count: 1; will-change: transform, opacity; }
+  @keyframes floatUp { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-110vh) scale(1.4); opacity: 0; } }
 
-  @media (max-width:420px) {
-    .mcq-horizontal .mcq-opt { padding:8px 10px; font-size:14px }
-    .photo-show { width:140px; height:140px }
-    .gift { width:84px; height:84px; font-size:24px }
-  }
+  @media (max-width:420px) { .mcq-horizontal .mcq-opt { padding:8px 10px; font-size:14px } .photo-show { width:140px; height:140px } .gift { width:84px; height:84px; font-size:24px } }
 </style>
 </head>
 <body>
 
-<audio id="bg-music" autoplay loop>
+<audio id="bg-music" loop>
   <source src="A_Thousand_Years.mp3" type="audio/mpeg">
 </audio>
 
@@ -130,7 +65,7 @@
   <h2 id="question"></h2>
   <div id="options" aria-live="polite"></div>
   <div style="height:10px;"></div>
-  <button id="submitBtn" onclick="checkAnswer()">Submit</button>
+  <button onclick="checkAnswer()">Submit</button>
   <p id="feedback" style="color:#b0003b;margin-top:12px;"></p>
 </section>
 
@@ -162,23 +97,18 @@
 <iframe name="hidden_iframe" style="display:none;"></iframe>
 
 <script>
-const questions = [
-  { q: "When did you meet your boyfriend for the first time?", type: "date", correct: "2024-09-25" },
-  { q: "Your boyfriend's date of birth?", type: "mcq", options: ["20/07/2000","21/07/2000","20/06/2001"], correct: "20/07/2000" },
-  { q: "Have you kissed your boyfriend? If yes, from where was your first kiss?", type: "text" },
-  { q: "Your best memory with your boyfriend?", type: "text" },
-  { q: "What do you love most about him?", type: "text" },
-  { q: "What name do you love to call him?", type: "text" }
+const questions=[
+  { q:"When did you meet your boyfriend for the first time?", type:"date", correct:"2024-09-25" },
+  { q:"Your boyfriend's date of birth?", type:"mcq", options:["20/07/2000","21/07/2000","20/06/2001"], correct:"20/07/2000" },
+  { q:"Have you kissed your boyfriend? If yes, from where was your first kiss?", type:"text" },
+  { q:"Your best memory with your boyfriend?", type:"text" },
+  { q:"What do you love most about him?", type:"text" },
+  { q:"What name do you love to call him?", type:"text" }
 ];
 
 let step=0, expectedGift=1, responses=[];
 
-function showSection(id){
-  document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  window.scrollTo(0,0);
-}
-
+function showSection(id){ document.querySelectorAll('section').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); window.scrollTo(0,0); }
 function goToQuiz(){ showSection('quiz'); loadQuestion(); }
 
 function loadQuestion(){
@@ -204,8 +134,7 @@ function submitToGoogleForm(){
 }
 
 function openGift(n){
-  const msg=document.getElementById('giftMessage');
-  msg.style.fontSize='22px'; msg.style.fontWeight='700';
+  const msg=document.getElementById('giftMessage'); msg.style.fontSize='22px'; msg.style.fontWeight='700';
   if(n!==expectedGift){ msg.innerText='Please click the boxes in order: 1 → 2 → 3 ❤️'; return; }
   const g=document.getElementById('gift'+n); g.style.transition='opacity .4s, transform .4s'; g.style.opacity='0'; g.style.transform='scale(.6) translateY(10px)'; setTimeout(()=>g.remove(),420);
   if(n===1) msg.innerText='😂 Your boyfriend’s bank balance is less than ₹100! So, No Gift Here';
@@ -213,8 +142,20 @@ function openGift(n){
   else showFinal(); expectedGift++;
 }
 
-// showFinal(), startFloatingHearts() and music autoplay logic remain unchanged from your working code
+// showFinal(), startFloatingHearts() remain identical to your original working code
 
+// Music autoplay fallback
+document.addEventListener('DOMContentLoaded',()=>{
+  const audio=document.getElementById('bg-music');
+  audio.play().catch(()=>{
+    const prompt=document.createElement('div');
+    prompt.innerHTML='🔊 Tap anywhere to enable music';
+    Object.assign(prompt.style,{position:'fixed',left:'50%',top:'12%',transform:'translateX(-50%)',background:'rgba(255,255,255,0.92)',padding:'8px 14px',borderRadius:'999px',zIndex:99998,color:'#d63384',border:'1px solid #ff99cc',cursor:'pointer'});
+    document.body.appendChild(prompt);
+    const enable=()=>{ audio.play().catch(()=>{}); prompt.remove(); document.removeEventListener('click',enable); };
+    document.addEventListener('click',enable);
+  });
+});
 </script>
 </body>
 </html>
