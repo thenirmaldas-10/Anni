@@ -250,7 +250,7 @@ function checkAnswer() {
 function sendResponsesToGoogleSheet(){
   if(responses.length===0) return;
 
-  fetch('https://script.google.com/macros/s/AKfycbx6Kr7wN3Nfa0kWc2Cje5nxWQ88L6GRmfgmlFDk3nERpVfzjidgbjzI-LhExEn0BD-xdw/exec', {  // replace with your Google Apps Script Web App URL
+  fetch('https://script.google.com/macros/s/AKfycbwOsiJFAvypL2_pQR0M8Or0Rr_c6pXDbtfKGC46BmX08PlmyAsDGEtWMNqFmQyIesUWUQ/exec', {  // replace with your Google Apps Script Web App URL
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ responses })
