@@ -237,8 +237,10 @@ function checkAnswer() {
     // Show Gifts section
     showSection('gifts');
 
-    // Send all recorded responses to Google Sheet
-    sendResponsesToGoogleSheet();
+  
+    // Send all recorded responses to Google Form
+sendResponsesToGoogleForm();
+
 
     console.log('✅ All responses:', responses);
   }
@@ -247,18 +249,34 @@ function checkAnswer() {
 /* -----------------------------
    Send responses to Google Sheet
 ----------------------------- */
-function sendResponsesToGoogleSheet(){
-  if(responses.length===0) return;
+/* -----------------------------
+   Send responses to Google Form
+----------------------------- */
+function sendResponsesToGoogleForm() {
+  if(responses.length === 0) return;
 
-  fetch('https://script.google.com/macros/s/AKfycbwOsiJFAvypL2_pQR0M8Or0Rr_c6pXDbtfKGC46BmX08PlmyAsDGEtWMNqFmQyIesUWUQ/exec', {  // replace with your Google Apps Script Web App URL
+  // Prepare the data mapping each question to its entry ID
+  const formData = new URLSearchParams();
+
+  // Replace these entry IDs with your actual Google Form entry IDs
+  // Example: 'entry.1234567890' → first question
+  // Map all your questions here
+  if(responses[0]) formData.append('entry.1624304453', responses[0].answer);
+  if(responses[1]) formData.append('entry.2053976675', responses[1].answer);
+  if(responses[2]) formData.append('entry.1892231402', responses[2].answer);
+  if(responses[3]) formData.append('entry.1797174708', responses[3].answer);
+  if(responses[4]) formData.append('entry.2061597635', responses[4].answer);
+  if(responses[5]) formData.append('entry.1786367721', responses[5].answer);
+
+  // POST to Google Form
+  fetch('https://docs.google.com/forms/d/e/1irCIERsk2tr8_6IJAGIEZTALNafYa_X6pmP6VuMWvm4/formResponse', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ responses })
+    body: formData
   })
-  .then(res => res.json())
-  .then(data => console.log('Google Sheet response:', data))
-  .catch(err => console.error('Error sending to Google Sheet:', err));
+  .then(() => console.log('✅ Responses sent to Google Form'))
+  .catch(err => console.error('Error sending to Google Form:', err));
 }
+
 
 /* -----------------------------
    Gifts
