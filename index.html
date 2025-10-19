@@ -242,8 +242,8 @@ function sendResponsesToGoogleForm(){
 function openGift(n){
   const msg=document.getElementById('giftMessage'); if(n!==expectedGift){ msg.innerText='Click in order: 1 → 2 → 3 ❤️'; return;}
   const g=document.getElementById('gift'+n); g.style.transition='opacity .4s, transform .4s'; g.style.opacity='0'; g.style.transform='scale(.6) translateY(10px)'; setTimeout(()=>g.remove(),420);
-  if(n===1) msg.innerText='😂 No gift here!';
-  else if(n===2) msg.innerText='💞 Best gift is my love!';
+  if(n===1) msg.innerText='Your Boyfriend's Bank Balance is less than Rs. 100. 😂 No gift here!';
+  else if(n===2) msg.innerText='💞 Your Best gift is your boyfriend's love! Love You Kannaa❤️';
   else showFinal();
   expectedGift++;
 }
