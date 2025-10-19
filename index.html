@@ -263,7 +263,12 @@ function checkAnswer(){
 
   step++;
   if(step < questions.length) loadQuestion();
-  else showSection('gifts');
+  else {
+  console.log("✅ Final Responses:", userResponses);
+  downloadResponses(); // ⬅️ automatically downloads responses.json
+  showSection('gifts');
+}
+
 }
 
 /* -----------------------------
@@ -359,6 +364,24 @@ document.addEventListener('DOMContentLoaded',()=>{
     document.addEventListener('click', enable);
   });
 });
+/* -----------------------------
+   Download responses as a file
+   ----------------------------- */
+function downloadResponses(filename = 'responses.json') {
+  const dataStr = JSON.stringify(userResponses, null, 2); // convert to readable JSON
+  const blob = new Blob([dataStr], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+ 
 </script>
 </body>
 </html>
