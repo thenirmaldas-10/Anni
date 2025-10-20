@@ -250,8 +250,8 @@ function openGift(n){
   const g=document.getElementById('gift'+n);
   g.style.opacity='0'; g.style.transform='scale(.6) translateY(10px)';
   setTimeout(()=>g.remove(),400);
-  if(n===1) msg.innerText='Your Boyfriend's bank balance is less than ₹100 ! 😂 No gift here!';
-  else if(n===2) msg.innerText='💞 Your Best gift is your boyfriend's love! Love You Kannaa ❤️'; 
+  if(n===1) msg.innerText="Your Boyfriend's bank balance is less than ₹100 ! 😂 No gift here!";
+  else if(n===2) msg.innerText="💞 Your Best gift is your boyfriend's love! Love You Kannaa ❤️"; 
   else showFinal();
   expectedGift++;
 }
